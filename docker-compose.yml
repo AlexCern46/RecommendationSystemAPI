@@ -4,18 +4,32 @@ version: '3.8'
 services:
   web:
     build: ./RecommendationSystemAPI
-    ports:
-      - "8000:8000"
     env_file:
       - .env
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - REDIS_URL=${REDIS_URL}
+      - MINIO_STORAGE_ENDPOINT=${MINIO_STORAGE_ENDPOINT}
+      - MINIO_STORAGE_ACCESS_KEY=${MINIO_STORAGE_ACCESS_KEY}
+      - MINIO_STORAGE_SECRET_KEY=${MINIO_STORAGE_SECRET_KEY}
     depends_on:
       - db
       - redis
+      - minio
 
   db:
     image: postgres:latest
     env_file:
       - .env
+    environment:
+      - POSTGRES_DB: ${POSTGRES_DB}
+      - POSTGRES_USER: ${POSTGRES_USER}
+      - POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -30,16 +44,17 @@ services:
     image: minio/minio
     ports:
       - "9000:9000"
+      - "9001:9001"
+    env_file:
+      - .env
     environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_ROOT_USER: ${MINIO_STORAGE_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_STORAGE_SECRET_KEY}
     volumes:
       - minio_data:/data
-      - minio_config:/root/.minio
 
-    command: server /data
+    command: server /data --console-address ":9001"
 
 volumes:
   db_data:
   minio_data:
-  minio_config:
