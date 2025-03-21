@@ -25,4 +25,4 @@ class ActorMovieView(generics.ListAPIView):
 
     def get_queryset(self):
         actor_id = self.kwargs['pk']
-        return Movie.objects.filter(actor__id=actor_id)
+        return Movie.objects.filter(actors__id=actor_id)

@@ -1,20 +1,28 @@
-from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, viewsets
+
+from books.models import Book
+from books.pagination import BookPagination
+from books.serializers import BookShortSerializer
 from .models import Author
-from .serializers import AuthorSerializer
+from .pagination import AuthorPagination
+from .serializers import AuthorShortSerializer, AuthorDetailSerializer
 
 
-class AuthorList(generics.ListCreateAPIView):
-    """
-    List all authors, or create a new author.
-    """
+class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
+    serializer_class = AuthorShortSerializer
+    pagination_class = AuthorPagination
 
 
-class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a author instance.
-    """
+class AuthorDetailView(generics.RetrieveAPIView):
     queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
+    serializer_class = AuthorDetailSerializer
+
+
+class AuthorBookView(generics.ListAPIView):
+    serializer_class = AuthorShortSerializer
+    pagination_class = AuthorPagination
+
+    def get_queryset(self):
+        author_id = self.kwargs['pk']
+        return Book.objects.filter(authors__id=author_id)

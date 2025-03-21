@@ -1,26 +1,14 @@
 from rest_framework import serializers
 
-from actors.models import Actor
+from actors.serializers import ActorShortSerializer
 from directors.serializers import DirectorShortSerializer
-from .models import Movie, MovieRating
+from .models import Movie
 
 
 class MovieShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ['id', 'title']
-
-
-class RatingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MovieRating
-        fields = '__all__'
-
-
-class ActorShortSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Actor
-        fields = ['id', 'name']
+        fields = ['id', 'title', 'poster']
 
 
 class MovieDetailSerializer(serializers.ModelSerializer):
@@ -29,4 +17,4 @@ class MovieDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ['id', 'title', 'description', 'directors', 'actors']
+        fields = '__all__'

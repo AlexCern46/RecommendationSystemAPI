@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import Movie, MovieRating
+from .models import Movie
 
 
 @admin.register(Movie)
@@ -35,24 +35,3 @@ class MovieAdmin(admin.ModelAdmin):
         return "Нет изображения"
 
     poster_preview.short_description = "Превью постера"
-
-
-@admin.register(MovieRating)
-class MovieRatingAdmin(admin.ModelAdmin):
-    list_display = ("movie", "user", "rating", "created_at", "short_review")
-    search_fields = ("movie__title", "user__username", "review")
-    list_filter = ("rating", "created_at")
-    ordering = ("-created_at",)
-    autocomplete_fields = ("movie", "user")
-    readonly_fields = ("created_at",)
-
-    fieldsets = (
-        (None, {"fields": ("movie", "user", "rating")}),
-        ("Отзыв", {"fields": ("review",)}),
-        ("Дополнительно", {"fields": ("created_at",)}),
-    )
-
-    def short_review(self, obj):
-        return obj.review[:50] + "..." if len(obj.review) > 50 else obj.review
-
-    short_review.short_description = "Краткий отзыв"
