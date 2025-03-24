@@ -2,7 +2,7 @@ version: '3.8'
 
 
 services:
-  web:
+  api:
     build: ./RecommendationSystemAPI
     env_file:
       - .env
@@ -16,6 +16,7 @@ services:
       - db
       - redis
       - minio
+      - celery
 
   db:
     image: postgres:latest
@@ -49,6 +50,14 @@ services:
       - minio_data:/data
 
     command: server /data --console-address ":9001"
+
+  celery:
+    build: ./RecommendationSystemAPI
+    env_file:
+      - .env
+    command: [ "celery", "-A", "RecommendationSystemAPI", "worker", "--loglevel=info" ]
+    depends_on:
+      - redis
 
 volumes:
   db_data:

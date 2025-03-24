@@ -15,7 +15,7 @@ class MovieRating(models.Model):
 
 
 class BookRating(models.Model):
-    movie = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="ratings")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="ratings")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     review = models.TextField()
     rating = models.IntegerField()

@@ -27,5 +27,5 @@ urlpatterns = [
     path('actors/', include('actors.urls')),
     path('authors/', include('authors.urls')),
     path('directors/', include('directors.urls')),
-    # path('recommendations/', include('recommendations.urls'))
+    path('recommendations/', include('recommendations.urls'))
 ]
