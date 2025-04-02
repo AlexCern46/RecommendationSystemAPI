@@ -9,7 +9,8 @@ User = get_user_model()
 
 class MovieStatus(models.TextChoices):
     NOT_WATCHED = 'not watched'
-    WATCHING = 'watched'
+    WATCHING = 'watching'
+    WATCHED = 'watched'
     DROPPED = 'dropped'
     PLANNED = 'planned'
 
@@ -29,6 +30,7 @@ class UserMovieStatus(models.Model):
 
 class BookStatus(models.TextChoices):
     NOT_READ = 'not read'
+    READING = 'reading'
     READ = 'read'
     DROPPED = 'dropped'
     PLANNED = 'planned'
