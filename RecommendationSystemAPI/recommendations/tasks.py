@@ -8,8 +8,13 @@ from surprise import Dataset, Reader, SVD
 from .models import RecommendedMovie, RecommendedBook
 
 STATUS_WEIGHTS = {
-    "watched": 1.0, "watching": 0.7, "plan to watch": 0.3,
-    "read": 1.0, "reading": 0.7, "plan to read": 0.3
+    "watched": 1.0,
+    "watching": 0.7,
+    "plan to watch": 0.3,
+
+    "read": 1.0,
+    "reading": 0.7,
+    "plan to read": 0.3
 }
 
 
