@@ -2,7 +2,6 @@ from books.models import Book
 from django.shortcuts import get_object_or_404
 from movies.models import Movie
 from rest_framework import generics, permissions
-from rest_framework.permissions import IsAuthenticated
 
 from .models import UserMovieStatus, MovieStatus, BookStatus, UserBookStatus
 from .serializers import UserMovieStatusSerializer, UpdateMovieStatusSerializer, UpdateBookStatusSerializer
@@ -10,7 +9,7 @@ from .serializers import UserMovieStatusSerializer, UpdateMovieStatusSerializer,
 
 class UpdateMovieStatusView(generics.UpdateAPIView):
     serializer_class = UpdateMovieStatusSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
         movie_id = self.kwargs['movie_id']
@@ -21,7 +20,7 @@ class UpdateMovieStatusView(generics.UpdateAPIView):
 
 class MoviesByStatusView(generics.ListAPIView):
     serializer_class = UserMovieStatusSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         status = self.request.query_params.get('status', MovieStatus.PLANNED)
@@ -30,7 +29,7 @@ class MoviesByStatusView(generics.ListAPIView):
 
 class UpdateBookStatusView(generics.UpdateAPIView):
     serializer_class = UpdateBookStatusSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
         book_id = self.kwargs['book_id']
@@ -41,7 +40,7 @@ class UpdateBookStatusView(generics.UpdateAPIView):
 
 class BooksByStatusView(generics.ListAPIView):
     serializer_class = UpdateBookStatusSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         status = self.request.query_params.get('status', BookStatus.PLANNED)

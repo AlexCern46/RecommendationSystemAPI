@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, permissions
 
 from movies.models import Movie
 from movies.pagination import MoviePagination
@@ -12,16 +12,19 @@ class ActorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorShortSerializer
     pagination_class = ActorPagination
+    permission_classes = (permissions.AllowAny,)
 
 
 class ActorDetailView(generics.RetrieveAPIView):
     queryset = Actor.objects.all()
     serializer_class = ActorDetailSerializer
+    permission_classes = (permissions.AllowAny,)
 
 
 class ActorMovieView(generics.ListAPIView):
     serializer_class = MovieShortSerializer
     pagination_class = MoviePagination
+    permission_classes = (permissions.AllowAny,)
 
     def get_queryset(self):
         actor_id = self.kwargs['pk']

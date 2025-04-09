@@ -1,4 +1,4 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, permissions
 
 from books.models import Book
 from books.pagination import BookPagination
@@ -12,16 +12,19 @@ class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorShortSerializer
     pagination_class = AuthorPagination
+    permission_classes = (permissions.AllowAny,)
 
 
 class AuthorDetailView(generics.RetrieveAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorDetailSerializer
+    permission_classes = (permissions.AllowAny,)
 
 
 class AuthorBookView(generics.ListAPIView):
     serializer_class = AuthorShortSerializer
     pagination_class = AuthorPagination
+    permission_classes = (permissions.AllowAny,)
 
     def get_queryset(self):
         author_id = self.kwargs['pk']
