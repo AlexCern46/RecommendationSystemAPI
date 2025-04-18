@@ -1,4 +1,6 @@
 from rest_framework import generics, viewsets, permissions
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 from movies.models import Movie
 from movies.pagination import MoviePagination
@@ -15,12 +17,14 @@ class ActorViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
 
+@method_decorator(cache_page(60 * 15), name='get')
 class ActorDetailView(generics.RetrieveAPIView):
     queryset = Actor.objects.all()
     serializer_class = ActorDetailSerializer
     permission_classes = (permissions.AllowAny,)
 
 
+@method_decorator(cache_page(60 * 15), name='get')
 class ActorMovieView(generics.ListAPIView):
     serializer_class = MovieShortSerializer
     pagination_class = MoviePagination

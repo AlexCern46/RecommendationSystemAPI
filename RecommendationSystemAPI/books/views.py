@@ -2,6 +2,8 @@ from ratings.models import BookRating
 from ratings.pagination import RatingPagination
 from ratings.serializers import BookRatingSerializer
 from rest_framework import generics, viewsets, permissions
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 from .models import Book
 from .pagination import BookPagination
@@ -15,12 +17,14 @@ class BookViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
 
+@method_decorator(cache_page(60 * 15), name='get')
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookDetailSerializer
     permission_classes = (permissions.AllowAny,)
 
 # TODO may be ratet this to ratings app
+@method_decorator(cache_page(60 * 15), name='get')
 class BookRatingsView(generics.ListAPIView):
     serializer_class = BookRatingSerializer
     pagination_class = RatingPagination

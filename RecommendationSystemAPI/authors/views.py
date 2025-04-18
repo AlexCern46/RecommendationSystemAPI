@@ -1,4 +1,6 @@
 from rest_framework import generics, viewsets, permissions
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 from books.models import Book
 from books.pagination import BookPagination
@@ -15,12 +17,14 @@ class AuthorViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
 
+@method_decorator(cache_page(60 * 15), name='get')
 class AuthorDetailView(generics.RetrieveAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorDetailSerializer
     permission_classes = (permissions.AllowAny,)
 
 
+@method_decorator(cache_page(60 * 15), name='get')
 class AuthorBookView(generics.ListAPIView):
     serializer_class = AuthorShortSerializer
     pagination_class = AuthorPagination
