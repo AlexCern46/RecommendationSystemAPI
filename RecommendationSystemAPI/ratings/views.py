@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
 
 from .serializers import MovieRatingSerializer, BookRatingSerializer
+from users.pemissions import IsOwnerOrReadOnly
 
 
 class MovieRatingCreateView(generics.CreateAPIView):
@@ -10,8 +11,7 @@ class MovieRatingCreateView(generics.CreateAPIView):
 
 class MovieRatingView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = MovieRatingSerializer
-    # TODO ovner permission for moderning rating
-    permission_class = (permissions.IsAuthenticated,)
+    permission_class = (IsOwnerOrReadOnly,)
 
 
 class BookRatingCreateView(generics.CreateAPIView):
@@ -21,5 +21,4 @@ class BookRatingCreateView(generics.CreateAPIView):
 
 class BookRatingView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookRatingSerializer
-    # TODO ovner permission for moderning rating
-    permission_class = (permissions.IsAuthenticated,)
+    permission_class = (IsOwnerOrReadOnly,)
