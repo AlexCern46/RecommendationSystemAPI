@@ -7,6 +7,7 @@ from surprise import Dataset, Reader, SVD
 
 from .models import RecommendedMovie, RecommendedBook
 
+
 STATUS_WEIGHTS = {
     "watched": 1.0,
     "watching": 0.7,
@@ -17,6 +18,16 @@ STATUS_WEIGHTS = {
     "plan to read": 0.3
 }
 
+
+def train_model(df, id_column):
+    reader = Reader(rating_scale=(1, 10))
+    data = Dataset.load_from_df(df[["user_id", id_column, "weighted_rating"]], reader)
+    model = SVD()
+    model.fit(data.build_full_trainset())
+    return model
+
+def apply_weight(row, col):
+    return row["rating"] * STATUS_WEIGHTS.get(row[col], 0)
 
 @shared_task
 def generate_recommendations():
@@ -30,9 +41,6 @@ def generate_recommendations():
     movie_df = pd.DataFrame(list(movie_ratings))
     book_df = pd.DataFrame(list(book_ratings))
 
-    def apply_weight(row, col):
-        return row["rating"] * STATUS_WEIGHTS.get(row[col], 0)
-
     if not movie_df.empty:
         movie_df["weighted_rating"] = movie_df.apply(lambda row: apply_weight(row, "user__usermoviestatus__status"),
                                                      axis=1)
@@ -42,13 +50,6 @@ def generate_recommendations():
         book_df["weighted_rating"] = book_df.apply(lambda row: apply_weight(row, "user__userbookstatus__status"),
                                                    axis=1)
         book_df = book_df[book_df["weighted_rating"] > 0]
-
-    def train_model(df, id_column):
-        reader = Reader(rating_scale=(1, 10))
-        data = Dataset.load_from_df(df[["user_id", id_column, "weighted_rating"]], reader)
-        model = SVD()
-        model.fit(data.build_full_trainset())
-        return model
 
     if not movie_df.empty:
         movie_model = train_model(movie_df, "movie_id")

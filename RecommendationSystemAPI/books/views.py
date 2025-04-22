@@ -23,7 +23,7 @@ class BookDetailView(generics.RetrieveAPIView):
     serializer_class = BookDetailSerializer
     permission_classes = (permissions.AllowAny,)
 
-# TODO may be ratet this to ratings app
+# TODO may be move this to ratings app
 @method_decorator(cache_page(60 * 15), name='get')
 class BookRatingsView(generics.ListAPIView):
     serializer_class = BookRatingSerializer

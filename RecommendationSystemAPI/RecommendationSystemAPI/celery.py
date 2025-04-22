@@ -1,4 +1,5 @@
 import os
+from celery.schedules import crontab
 
 from celery import Celery
 
@@ -15,6 +16,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
+
+
+# app.conf.beat_schedule = {
+#     "generate-recommendations-daily": {
+#         "task": "recommendations.tasks.generate_recommendations",
+#         "schedule": crontab(hour=0, minute=0),
+#     },
+# }
 
 
 @app.task(bind=True, ignore_result=True)
