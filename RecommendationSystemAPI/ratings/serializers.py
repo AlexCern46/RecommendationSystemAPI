@@ -10,7 +10,7 @@ class MovieRatingSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'created_at']
 
     def validate_rating(self, value):
-        if value < 1 or value > 10:
+        if value < 1 or value > 5:
             raise serializers.ValidationError("Invalid value")
         return value
 
@@ -22,6 +22,6 @@ class BookRatingSerializer(serializers.ModelSerializer):
         read_only_fields = ['user', 'created_at']
 
     def validate_rating(self, value):
-        if value < 1 or value > 10:
+        if value < 1 or value > 5:
             raise serializers.ValidationError("Invalid value")
         return value
